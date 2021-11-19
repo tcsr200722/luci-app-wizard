@@ -59,6 +59,15 @@ return view.extend({
 		o.value('255.255.0.0');
 		o.value('255.0.0.0');
 
+		o = s.taboption('wansetup', form.Value, 'wan_gateway', _('IPv4 gateway'));
+		o.depends('wan_proto', 'static');
+		o.datatype = 'ip4addr';
+
+		o = s.taboption('wansetup', form.DynamicList, 'wan_dns', _('Use custom DNS servers'));
+		o.depends('wan_proto', 'static');
+		o.datatype = 'ip4addr';
+		o.cast = 'string';
+
 		o = s.taboption('wansetup', form.Flag, 'ipv6', _('Enable IPv6'), _('Enable/Disable IPv6'));
 		o.default = o.enabled;
 
@@ -90,6 +99,10 @@ return view.extend({
 		o.depends('siderouter', '1');
 		o.datatype = 'ip4addr';
 		o.placeholder = '请输入主路由IP';
+		
+		o = s.taboption('lansetup', form.Flag, 'dhcp', _('DHCP Server'));
+		o.depends('siderouter', '1');
+		o.default = o.enabled;
 
 		return m.render();
 	}
