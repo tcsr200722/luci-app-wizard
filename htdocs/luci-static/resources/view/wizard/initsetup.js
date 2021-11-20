@@ -70,6 +70,7 @@ return view.extend({
 
 		o = s.taboption('wansetup', form.Flag, 'ipv6', _('Enable IPv6'), _('Enable/Disable IPv6'));
 		o.default = o.enabled;
+		o.rmempty = false;
 
 		if (has_wifi) {
 			o = s.taboption('wifisetup', form.Value, 'wifi_ssid', _('<abbr title=\"Extended Service Set Identifier\">ESSID</abbr>'));
