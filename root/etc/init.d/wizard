@@ -96,11 +96,7 @@ add_wizard() {
 	if [ -n "${siderouter}" ]; then
 		uci -q set network.lan.gateway="${lan_gateway}"
 		uci -q set wizard.default.lan_dns='223.5.5.5'
-		if [ -n "$dhcp" ]; then
-		uci -q set dhcp.lan.ignore="1"
-		else
-		uci -q del dhcp.lan.ignore
-		fi
+		[ -n "$dhcp" ] && uci -q set dhcp.lan.ignore="1" || uci -q del dhcp.lan.ignore
 	else
 		uci -q del network.lan.gateway
 		uci -q del dhcp.lan.ignore
