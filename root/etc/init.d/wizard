@@ -12,7 +12,7 @@ add_wizard() {
 	local wan_proto wan_ipaddr wan_netmask wan_gateway wan_pppoe_user wan_pppoe_pass
 	local wifi_ssid wifi_key
 	local lan_ipaddr lan_netmask lan_dns lan_gateway dhcp
-	local device ipv6
+	local device ipv6 old_ipv6 siderouter old_siderouter
 
 	config_get wan_proto "$cfg" wan_proto
 
@@ -88,7 +88,7 @@ add_wizard() {
 			}
 		done
 	}
-	
+
 	config_get siderouter "$cfg" siderouter
 	config_get old_siderouter "$cfg" old_siderouter
 	config_get lan_gateway "$cfg" lan_gateway
@@ -130,8 +130,10 @@ add_wizard() {
 		/etc/init.d/odhcpd enable
 		/etc/init.d/odhcpd start
 	fi
+	uci -q set wizard.default.old_ipv6="${ipv6}"
 	fi
-
+	
+	uci commit wizard
 	uci commit network
 	uci commit wireless
 	(
