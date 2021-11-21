@@ -67,21 +67,8 @@ add_wizard() {
 		uci set network.lan.netmask="${lan_netmask}"
 	}
 
-	config_get wifi_ssid "$cfg" wifi_ssid
-	config_get wifi_key "$cfg" wifi_key
-
-	test -n "${wifi_ssid}" && test -n "${wifi_key}" && {
-		for idx in `seq 0 64`; do
-			uci get wireless.@wifi-iface[$idx] 2>/dev/null || break
-			[ "$(uci get wireless.@wifi-iface[$idx].mode 2>/dev/null)" = "ap" ] && {
-				uci set wireless.@wifi-iface[$idx].ssid="${wifi_ssid}"
-				uci set wireless.@wifi-iface[$idx].key="${wifi_key}"
-				uci set wireless.@wifi-iface[$idx].encryption='psk2'
-			}
-		done
-	}
-
 	config_get siderouter "$cfg" siderouter
+	config_get old_siderouter "$cfg" old_siderouter
 	config_get lan_gateway "$cfg" lan_gateway
 	config_get dhcp "$cfg" dhcp
 	config_get lan_dns "$cfg" lan_dns
@@ -104,6 +91,7 @@ add_wizard() {
 	fi
 	
 	config_get ipv6 "$cfg" ipv6
+	config_get old_ipv6 "$cfg" old_ipv6
 	
 	if [ "${ipv6}" != "old_ipv6" ]; then
 	if [ -n "${ipv6}" ]; then
@@ -144,7 +132,6 @@ uci -q set wizard.default.wan_pppoe_pass="$(uci -q get network.wan.password)"
 uci -q set wizard.default.lan_netmask="$(uci -q get network.lan.netmask)"
 uci -q set wizard.default.lan_gateway="$(uci -q get network.lan.gateway)"
 uci -q set wizard.default.lan_dns="$(uci -q get network.lan.dns)"
-uci -q set wizard.default.dhcp="$(uci -q get dhcp.lan.ignore)"
 [ "$(uci -q get dhcp.lan.ignore)" ] && uci -q set wizard.default.dhcp="0"
 uci commit wizard
 }
